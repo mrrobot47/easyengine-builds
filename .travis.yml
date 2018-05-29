@@ -1,0 +1,25 @@
+sudo: false
+
+language: php
+php: 7.1
+
+env:
+  global:
+    - EE_BRANCH="release/v4"
+
+before_install:
+  - |
+    # Remove Xdebug for a huge performance increase:
+    if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
+      phpenv config-rm xdebug.ini
+    else
+      echo "xdebug.ini does not exist"
+    fi
+
+install:
+  - ./ci/prepare.sh
+
+jobs:
+  include:
+    - stage: deploy
+      script: ./ci/deploy.sh
